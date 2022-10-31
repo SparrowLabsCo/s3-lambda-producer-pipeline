@@ -13,7 +13,7 @@ resource "aws_lambda_function" "lambda_s3_handler" {
   source_code_hash = data.archive_file.lambda_zip_file.output_base64sha256
   handler          = "index.handler"
   role             = var.lambda_role_arn
-  runtime          = "nodejs16.x"
+  runtime          = var.runtime
 }
 
 data "archive_file" "lambda_zip_file" {

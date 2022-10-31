@@ -10,3 +10,8 @@ variable "lambda_source" {
 variable "archive_filepath" {
     type = string
 }
+
+variable "runtime" {
+    type = string
+    default = "nodejs16.x"
+}
