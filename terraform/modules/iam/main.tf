@@ -45,7 +45,7 @@ resource "aws_iam_role" "lambda-execution-role" {
 
 }
 
-resource "aws_iam_role_policy_attachment" "amplify-role-attach" {
+resource "aws_iam_role_policy_attachment" "lambda-execution-role-attach" {
   role = aws_iam_role.lambda-execution-role.name
   policy_arn = aws_iam_policy.iam-for-lambda.arn
 }
