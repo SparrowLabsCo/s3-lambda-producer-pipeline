@@ -1,3 +1,4 @@
 .envrc
 .terraform
 **/dist
+**/node_modules
