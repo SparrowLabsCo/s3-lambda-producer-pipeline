@@ -8,7 +8,7 @@ module "iam" {
 
 module "lambda" {
   source = "./modules/lambda"
-  lambda_source = "../src/index.js"
+  source_dir = "../src/dist"
   archive_filepath = "../src/dist/lambda.zip"
   lambda_role_arn = module.iam.lambda_execution_role.arn
 }

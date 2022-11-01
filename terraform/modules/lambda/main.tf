@@ -11,14 +11,14 @@ resource "aws_lambda_function" "lambda_s3_handler" {
   function_name    = "process-s3-new-objects"
   filename         = data.archive_file.lambda_zip_file.output_path
   source_code_hash = data.archive_file.lambda_zip_file.output_base64sha256
-  handler          = "index.handler"
+  handler          = "index.lambdaHandler"
   role             = var.lambda_role_arn
   runtime          = var.runtime
 }
 
 data "archive_file" "lambda_zip_file" {
   type        = "zip"
-  source_file = var.lambda_source
+  source_dir = var.source_dir
   output_path = var.archive_filepath
 }
 

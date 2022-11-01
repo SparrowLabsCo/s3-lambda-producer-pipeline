@@ -1,0 +1,46 @@
+# https://github.com/awslabs/serverless-application-model/blob/develop/versions/2016-10-31.md
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: s3-terraform-lambda
+
+Globals:
+  Function:
+    Timeout: 60
+
+Resources:
+  # GlobalDependenciesLayer:
+  #   Type: AWS::Serverless::LayerVersion
+  #   Properties:
+  #     LayerName: GlobalDependenciesLayer
+  #     ContentUri: layers/global-dependencies
+  #     CompatibleRuntimes:
+  #       - nodejs12.x
+  #     RetentionPolicy: Retain
+  #   Metadata:
+  #     BuildMethod: nodejs12.x
+
+  # GlobalApiResponsesLayer:
+  #   Type: AWS::Serverless::LayerVersion
+  #   Properties:
+  #     LayerName: GlobalApiResponsesLayer
+  #     ContentUri: layers/api-responses/dist
+  #     CompatibleRuntimes:
+  #       - nodejs12.x
+  #     RetentionPolicy: Retain
+  #   Metadata:
+  #     BuildMethod: nodejs12.x
+
+  S3ExampleFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handlers/index.handler
+      CodeUri: src/dist
+      #Layers:
+      #  - !Ref GlobalDependenciesLayer
+      #  - !Ref GlobalApiResponsesLayer
+      Runtime: nodejs16.x
+      Events:
+        FileUpload:
+          Type: S3
+          Properties:
+            Events: s3:ObjectCreated:*

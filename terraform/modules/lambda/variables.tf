@@ -3,7 +3,7 @@ variable "lambda_role_arn" {
     type = string
 }
 
-variable "lambda_source" {
+variable "source_dir" {
     type = string
 }
 
