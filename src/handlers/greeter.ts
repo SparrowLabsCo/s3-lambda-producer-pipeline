@@ -18,7 +18,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
    
     try {
         if(event.body == null)
-            throw new Error("Event payload as not found.");
+            throw new Error("Event payload was not found.");
         
         response = {
             statusCode: 200,
