@@ -7,6 +7,15 @@ const config: Config.InitialOptions = {
     collectCoverage: true,
     coverageDirectory: 'coverage',
     coverageProvider: 'v8',
+    coveragePathIgnorePatterns: [
+        "node_modules",
+        "test-config",
+        "interfaces",
+        "jestGlobalMocks.ts",
+        ".module.ts",
+        "<rootDir>/src/tests",
+        ".mock.ts"
+    ],
     roots: ['src'],
     testMatch: ['**/tests/unit/**/*.spec.+(ts|tsx)'],
     transform: {
