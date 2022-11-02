@@ -4,10 +4,13 @@ const config: Config.InitialOptions = {
     preset: 'ts-jest',
     testEnvironment: 'node',
     verbose: true,
-    automock: true,
     collectCoverage: true,
     coverageDirectory: 'coverage',
     coverageProvider: 'v8',
-    testMatch: ['**/tests/unit/*.test.ts'],
+    roots: ['src'],
+    testMatch: ['**/tests/unit/**/*.+(ts|tsx|js)'],
+    transform: {
+        '^.+\\.(ts|tsx)$': 'ts-jest'
+    }
 };
 export default config;

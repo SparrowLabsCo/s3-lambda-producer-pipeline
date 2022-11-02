@@ -14,17 +14,18 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     console.log(`Greeter Event: ${JSON.stringify(event)}`);
 
     let response: APIGatewayProxyResult;
+    
     try {
         response = {
             statusCode: 200,
-            body: JSON.stringify({
-                message: 'hello octonauts',
-            }),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: "hello octonauts" })
         };
     } catch (err: unknown) {
         console.log(err);
         response = {
             statusCode: 500,
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 message: err instanceof Error ? err.message : 'some error happened',
             }),

@@ -52,9 +52,10 @@ describe('Unit test for greeter handler', function () {
             resource: '',
             stageVariables: {},
         };
+
         const result: APIGatewayProxyResult = await handler(event);
 
-        console.log(result)
+        expect(result).not.toBeNull
         expect(result.statusCode).toEqual(200);
         expect(result.body).toEqual(
             JSON.stringify({

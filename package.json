@@ -28,7 +28,7 @@
         "watch": "node_modules/typescript/bin/tsc -w --preserveWatchOutput",
         "jest": "jest",
         "lint": "eslint '*.ts' --quiet --fix",
-        "test": "npm run build && npm run jest",
+        "test": "npm run build && npm run jest --config=jest.config.ts",
         "start:dev" : "sam local start-api"
     }
 }
