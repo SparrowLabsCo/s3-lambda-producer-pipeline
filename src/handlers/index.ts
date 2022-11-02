@@ -1,4 +1,4 @@
-import { Context, Callback, S3Event } from 'aws-lambda';
+import { S3Event } from 'aws-lambda';
 
 exports.handler = async (event: S3Event) => {
     console.log("executing function")

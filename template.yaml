@@ -29,6 +29,18 @@ Resources:
   #     RetentionPolicy: Retain
   #   Metadata:
   #     BuildMethod: nodejs12.x
+  GreeterFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handlers/greeter.handler
+      CodeUri: src/dist
+      Runtime: nodejs16.x
+      Events:
+        HttpPost:
+          Type: Api
+          Properties:
+            Path: '/greeter'
+            Method: POST
 
   S3ExampleFunction:
     Type: AWS::Serverless::Function
