@@ -2,6 +2,9 @@
     "$schema": "https://json.schemastore.org/tsconfig",
     "display": "Node 16",
     "include": ["src/**/*.ts", "src/**/*.js"],
+    "exclude": [
+      "src/**/*.spec.ts"
+    ],
     "compilerOptions": {
       "lib": ["es2021"],
       "module": "commonjs",
