@@ -1,4 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { hasUncaughtExceptionCaptureCallback } from 'process';
 
 /**
  *
@@ -14,8 +15,11 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     console.log(`Greeter Event: ${JSON.stringify(event)}`);
 
     let response: APIGatewayProxyResult;
-    
+   
     try {
+        if(event.body == null)
+            throw new Error("Event payload as not found.");
+        
         response = {
             statusCode: 200,
             headers: { "Content-Type": "application/json" },

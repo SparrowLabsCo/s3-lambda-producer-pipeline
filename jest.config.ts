@@ -8,7 +8,7 @@ const config: Config.InitialOptions = {
     coverageDirectory: 'coverage',
     coverageProvider: 'v8',
     roots: ['src'],
-    testMatch: ['**/tests/unit/**/*.+(ts|tsx|js)'],
+    testMatch: ['**/tests/unit/**/*.+(ts|tsx)'],
     transform: {
         '^.+\\.(ts|tsx)$': 'ts-jest'
     }
