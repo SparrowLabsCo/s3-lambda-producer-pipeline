@@ -2,6 +2,11 @@
 
 The Terraform template deploys a Lambda function, an S3 bucket and the IAM resources required to run the application. A Lambda function consumes <code>ObjectCreated</code> events from an Amazon S3 bucket. The Lambda code checks the uploaded file and logs the event.
 
+
+## Notes
+
+1.  This blueprint will create a vpc as part of the deployment unless `vpc_id` is passsd as a variable to terraform commands.
+
 ## Deployment Instructions
 
 1. From the command line, initialize terraform to download and install the providers defined in the configuration:

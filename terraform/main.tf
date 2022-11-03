@@ -12,3 +12,11 @@ module "lambda" {
   archive_filepath = "../src/dist/lambda.zip"
   lambda_role_arn = module.iam.lambda_execution_role.arn
 }
+
+
+/***** Optional *********/
+module "cluster_vpc" {
+  count = var.vpc_id == null ? 1 : 0
+  source = "./modules/vpc"
+  vpc_name   = "${terraform.workspace}-s3-terraform-lambda-vpc"
+}
