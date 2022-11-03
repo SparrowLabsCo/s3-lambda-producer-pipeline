@@ -15,7 +15,7 @@ module "lambda" {
 
 
 /***** Optional *********/
-module "cluster_vpc" {
+module "vpc" {
   count = var.vpc_id == null ? 1 : 0
   source = "./modules/vpc"
   vpc_name   = "${terraform.workspace}-s3-terraform-lambda-vpc"
