@@ -14,6 +14,11 @@ resource "aws_lambda_function" "lambda_s3_handler" {
   handler          = "index.handler"
   role             = var.lambda_role_arn
   runtime          = var.runtime
+
+  vpc_config {
+    subnet_ids = var.subnet_ids
+    security_group_ids = concat(var.additional_security_group_ids, [aws_security_group.lambda_msk.id])
+  }
 }
 
 data "archive_file" "lambda_zip_file" {
@@ -45,7 +50,28 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
   depends_on = [aws_lambda_permission.allow_bucket_invoke_lambda]
 }
 
+
+resource "aws_security_group" "lambda_msk" {
+  name   = "lambda-msk-${terraform.workspace}-${random_string.random.result}"
+  vpc_id = var.vpc_id
+}
+
+resource "aws_security_group_rule" "lambda_msk" {
+  type              = "ingress"
+  from_port         = 9092
+  to_port           = 9092
+  protocol          = "TCP"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.lambda_msk.id
+}
+
 output "input_bucket" {
   value       = aws_s3_bucket.input_bucket.bucket
   description = "The name of the bucket for file input."
+}
+
+
+output "lambda_sg_id" {
+  value       = aws_security_group.lambda_msk.id
+  description = "The SG for the lambda function."
 }
