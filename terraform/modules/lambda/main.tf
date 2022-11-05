@@ -49,3 +49,9 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 
   depends_on = [aws_lambda_permission.allow_bucket_invoke_lambda]
 }
+
+
+output "input_bucket" {
+  value       = aws_s3_bucket.input_bucket.bucket
+  description = "The name of the bucket for file input."
+}

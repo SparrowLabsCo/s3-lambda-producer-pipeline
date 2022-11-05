@@ -12,7 +12,7 @@ resource "aws_msk_serverless_cluster" "s3_streaming" {
 
   vpc_config {
     subnet_ids         = var.subnet_ids
-    security_group_ids = concat(var.additional_security_group_ids,[aws_security_group.msk_sg.id])
+    security_group_ids = concat(var.additional_security_group_ids,[])
   }
 
   client_authentication {

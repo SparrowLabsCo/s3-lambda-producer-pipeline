@@ -12,7 +12,7 @@ module "lambda" {
   archive_filepath = "../src/dist/lambda.zip"
   lambda_role_arn = module.iam.lambda_execution_role.arn
   subnet_ids = [for s in data.aws_subnet.private : s.id]
-  additional_security_group_ids = [module.sg.lambda_msk_id]
+  additional_security_group_ids = [module.sg.msk_sg_id]
   vpc_id = var.vpc_id
 
   depends_on = [
@@ -26,7 +26,13 @@ module "msk" {
   subnet_ids = [for s in data.aws_subnet.private : s.id]
   #additional_security_group_ids = []
   vpc_id = var.vpc_id
-  lambda_sg_id = module.lambda.lambda_sg_id
+  lambda_sg_id = module.sg.lambda_sg_id
+}
+
+module "sg" {
+  source = "./modules/sg"
+  vpc_id = var.vpc_id
+
 }
 
 
