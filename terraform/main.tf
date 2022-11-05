@@ -16,8 +16,8 @@ module "lambda" {
   vpc_id = var.vpc_id
 
   depends_on = [
-    #module.sg,
-    #module.msk
+    module.sg,
+    module.msk
   ]
 }
 
@@ -27,12 +27,15 @@ module "msk" {
   #additional_security_group_ids = []
   vpc_id = var.vpc_id
   lambda_sg_id = module.sg.lambda_sg_id
+
+  depends_on = [
+    module.sg
+  ]
 }
 
 module "sg" {
   source = "./modules/sg"
   vpc_id = var.vpc_id
-
 }
 
 
