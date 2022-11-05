@@ -1,12 +1,20 @@
-resource "aws_iam_policy" "iam-for-lambda" {
-  name        = "iam-for-lambda-policy"
+resource "aws_iam_policy" "iam-for-lambda-logs" {
+  name        = "iam-for-lambda-policy-logs"
   #path        = ""
   description = "IAM Policy for Lambda execution"
 
-  policy = data.aws_iam_policy_document.iam-for-lambda-doc.json
+  policy = data.aws_iam_policy_document.iam-for-lambda-logs.json
 }
 
-data "aws_iam_policy_document" "iam-for-lambda-doc" {
+resource "aws_iam_policy" "iam-for-lambda-ec2" {
+  name        = "iam-for-lambda-policy-ec2"
+  #path        = ""
+  description = "IAM Policy for Lambda execution"
+
+  policy = data.aws_iam_policy_document.iam-for-lambda-ec2.json
+}
+
+data "aws_iam_policy_document" "iam-for-lambda-logs" {
   statement {
     sid = "AllowLambdaFunctionToCreateLogs"
     actions = [ 
@@ -14,7 +22,22 @@ data "aws_iam_policy_document" "iam-for-lambda-doc" {
     ]
     effect = "Allow"
     resources = [ 
-      "arn:aws:logs:*:*:*" 
+      "arn:aws:logs:*:*:*",
+    ]
+  }
+}
+
+data "aws_iam_policy_document" "iam-for-lambda-ec2" {
+statement {
+    sid = "AllowLambdaFunctionExecuteEC2"
+    actions = [ 
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DeleteNetworkInterface" 
+    ]
+    effect = "Allow"
+    resources = [ 
+      "*",
     ]
   }
 }
@@ -47,5 +70,10 @@ resource "aws_iam_role" "lambda-execution-role" {
 
 resource "aws_iam_role_policy_attachment" "lambda-execution-role-attach" {
   role = aws_iam_role.lambda-execution-role.name
-  policy_arn = aws_iam_policy.iam-for-lambda.arn
+  policy_arn = aws_iam_policy.iam-for-lambda-logs.arn
+}
+
+resource "aws_iam_role_policy_attachment" "lambda-execution-role-attach-1" {
+  role = aws_iam_role.lambda-execution-role.name
+  policy_arn = aws_iam_policy.iam-for-lambda-ec2.arn
 }
