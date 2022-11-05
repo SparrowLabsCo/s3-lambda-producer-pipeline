@@ -8,7 +8,7 @@ resource "random_string" "random" {
 }
 
 resource "aws_security_group" "msk_sg" {
-  name   = "msk-lambda-ingress-${terraform.workspace}-${random_string.random.result}"
+  name   = "msk-sg-${terraform.workspace}"
   vpc_id = var.vpc_id
 }
 
@@ -33,7 +33,7 @@ resource "aws_security_group_rule" "lambda_ingress" {
 
 
 resource "aws_security_group" "lambda_sg" {
-  name   = "lambda-msk-${terraform.workspace}-${random_string.random.result}"
+  name   = "lambda-sg-${terraform.workspace}"
   vpc_id = var.vpc_id
 }
 

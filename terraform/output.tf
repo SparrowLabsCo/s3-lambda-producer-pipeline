@@ -11,5 +11,10 @@ output "private_subnet_ids" {
 }
 
 output "cluster_arn" {
-    value = module.msk.cluster_bootstrap_arn
+    value = module.msk.cluster_arn
+}
+
+
+output cluster_bootstrap_ep {
+   value = ""
 }
