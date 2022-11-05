@@ -23,3 +23,7 @@ resource "aws_msk_serverless_cluster" "s3_streaming" {
     }
   }
 }
+
+output cluster_bootstrap_arn {
+   value = aws_msk_serverless_cluster.s3_streaming.arn
+}

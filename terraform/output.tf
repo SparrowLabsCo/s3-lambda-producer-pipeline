@@ -9,3 +9,7 @@ output "private_subnet_cidr_blocks" {
 output "private_subnet_ids" {
   value = [for s in data.aws_subnet.private : s.id]
 }
+
+output "cluster_arn" {
+    value = module.msk.cluster_bootstrap_arn
+}
