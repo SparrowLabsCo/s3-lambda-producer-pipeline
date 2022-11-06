@@ -23,8 +23,8 @@ resource "aws_security_group_rule" "msk_self" {
 
 resource "aws_security_group_rule" "lambda_ingress" {
   type              = "ingress"
-  from_port         = 9092
-  to_port           = 9092
+  from_port         = 9098
+  to_port           = 9098
   protocol          = "TCP"
   source_security_group_id = aws_security_group.lambda_sg.id
   security_group_id = aws_security_group.msk_sg.id
@@ -39,8 +39,8 @@ resource "aws_security_group" "lambda_sg" {
 
 resource "aws_security_group_rule" "lambda_msk" {
   type              = "ingress"
-  from_port         = 9092
-  to_port           = 9092
+  from_port         = 9098
+  to_port           = 9098
   protocol          = "TCP"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.lambda_sg.id
