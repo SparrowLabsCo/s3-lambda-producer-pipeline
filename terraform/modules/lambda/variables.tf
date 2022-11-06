@@ -19,6 +19,10 @@ variable "vpc_id" {
     type = string
 }
 
+variable "kafka_brokers" {
+    type = string
+}
+
 variable "runtime" {
     type = string
     default = "nodejs16.x"

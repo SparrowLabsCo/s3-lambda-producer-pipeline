@@ -19,6 +19,12 @@ resource "aws_lambda_function" "lambda_s3_handler" {
     subnet_ids = var.subnet_ids
     security_group_ids = concat(var.additional_security_group_ids, [])
   }
+
+  environment {
+    variables = {
+      KAFKA_BROKERS = var.kafka_brokers
+    }
+  }
 }
 
 data "archive_file" "lambda_zip_file" {

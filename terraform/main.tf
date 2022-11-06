@@ -14,6 +14,7 @@ module "lambda" {
   subnet_ids = [for s in data.aws_subnet.private : s.id]
   additional_security_group_ids = [module.sg.msk_sg_id]
   vpc_id = var.vpc_id
+  kafka_brokers =  module.msk.cluster_ep
 
   depends_on = [
     module.sg,
