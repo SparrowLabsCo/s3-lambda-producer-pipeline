@@ -16,5 +16,5 @@ output "cluster_arn" {
 
 
 output cluster_bootstrap_ep {
-   value = ""
+   value = module.msk.cluster_ep
 }
