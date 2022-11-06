@@ -43,6 +43,12 @@ resource "aws_lambda_permission" "allow_bucket_invoke_lambda" {
 
 resource "aws_s3_bucket" "input_bucket" {
   bucket = "input-bucket-${terraform.workspace}-${random_string.random.result}"
+  force_destroy = true
+}
+
+resource "aws_s3_bucket_acl" "input_bucket_acl" {
+  bucket = aws_s3_bucket.input_bucket.id
+  acl    = "private"
 }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {
