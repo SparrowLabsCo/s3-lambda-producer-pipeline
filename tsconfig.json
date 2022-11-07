@@ -15,6 +15,11 @@
       "esModuleInterop": true,
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true,
-      "moduleResolution": "node"
+      "moduleResolution": "node",
+      /* Experimental Options */
+      "experimentalDecorators": true, 
+      "emitDecoratorMetadata": true, 
+      /* Advanced Options */
+      "forceConsistentCasingInFileNames": true 
     }
 }

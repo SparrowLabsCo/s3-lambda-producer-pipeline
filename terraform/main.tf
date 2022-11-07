@@ -10,8 +10,8 @@ module "lambda" {
   source = "./modules/lambda"
   source_dir = "../src/dist"
   archive_filepath = "../src/dist/lambda.zip"
-  dep_source_dir = "../../node_modules"
-  dep_archive_filepath = "../../node_modules.zip"
+  dep_source_dir = "../nodmodules"
+  dep_archive_filepath = "../node_modules.zip"
   lambda_role_arn = module.iam.lambda_execution_role.arn
   subnet_ids = [for s in data.aws_subnet.private : s.id]
   additional_security_group_ids = [module.sg.msk_sg_id]
