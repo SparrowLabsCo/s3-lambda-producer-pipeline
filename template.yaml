@@ -33,7 +33,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: handlers/greeter.handler
-      CodeUri: src/dist
+      CodeUri: functions/src/dist
       Runtime: nodejs16.x
       Events:
         HttpPost:
@@ -46,7 +46,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: handlers/index.handler
-      CodeUri: src/dist
+      CodeUri: functions/src/dist
       #Layers:
       #  - !Ref GlobalDependenciesLayer
       #  - !Ref GlobalApiResponsesLayer

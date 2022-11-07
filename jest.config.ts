@@ -16,7 +16,7 @@ const config: Config.InitialOptions = {
         "<rootDir>/src/tests",
         ".mock.ts"
     ],
-    roots: ['src'],
+    roots: ['functions/src'],
     testMatch: ['**/tests/unit/**/*.spec.+(ts|tsx)'],
     transform: {
         '^.+\\.(ts|tsx)$': 'ts-jest'

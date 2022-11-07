@@ -9,8 +9,8 @@ module "iam" {
 
 module "lambda" {
   source = "./modules/lambda"
-  source_dir = "../src/dist"
-  archive_filepath = "../src/dist/lambda.zip"
+  source_dir = "../functions/dist"
+  archive_filepath = "../functions/dist/lambda.zip"
   dep_source_dir = "../layers/common-dependencies/"
   dep_archive_filepath = "../layers/common-dependencies/common-dependencies.zip"
   lambda_role_arn = module.iam.lambda_execution_role.arn
