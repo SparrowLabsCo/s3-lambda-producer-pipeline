@@ -1,0 +1,17 @@
+{
+  "name": "common-dependencies",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-lambda-powertools/logger": "^1.4.0",
+    "@aws-lambda-powertools/metrics": "^1.4.0",
+    "@aws-lambda-powertools/tracer": "^1.4.0",
+    "kafkajs": "^2.2.2"
+  }
+}
