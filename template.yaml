@@ -8,27 +8,17 @@ Globals:
     Timeout: 60
 
 Resources:
-  # GlobalDependenciesLayer:
-  #   Type: AWS::Serverless::LayerVersion
-  #   Properties:
-  #     LayerName: GlobalDependenciesLayer
-  #     ContentUri: layers/global-dependencies
-  #     CompatibleRuntimes:
-  #       - nodejs12.x
-  #     RetentionPolicy: Retain
-  #   Metadata:
-  #     BuildMethod: nodejs12.x
+  GlobalDependenciesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: GlobalDependenciesLayer
+      ContentUri: layers/common-dependencies
+      CompatibleRuntimes:
+        - nodejs16.x
+      RetentionPolicy: Retain
+    Metadata:
+      BuildMethod: nodejs16.x
 
-  # GlobalApiResponsesLayer:
-  #   Type: AWS::Serverless::LayerVersion
-  #   Properties:
-  #     LayerName: GlobalApiResponsesLayer
-  #     ContentUri: layers/api-responses/dist
-  #     CompatibleRuntimes:
-  #       - nodejs12.x
-  #     RetentionPolicy: Retain
-  #   Metadata:
-  #     BuildMethod: nodejs12.x
   GreeterFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -47,9 +37,8 @@ Resources:
     Properties:
       Handler: handlers/index.handler
       CodeUri: functions/src/dist
-      #Layers:
-      #  - !Ref GlobalDependenciesLayer
-      #  - !Ref GlobalApiResponsesLayer
+      Layers:
+        - !Ref GlobalDependenciesLayer
       Runtime: nodejs16.x
       Events:
         FileUpload:
