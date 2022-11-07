@@ -9,7 +9,7 @@
         "@aws-lambda-powertools/tracer": "^1.4.0",
         "@jm18457/kafkajs-msk-iam-authentication-mechanism": "^2.0.2",
         "aws-sdk": "^2.437.0",
-        "kafkajs": "github:tulios/kafkajs#840-allow-injecting-authentication-mechanisms",
+        "kafkajs": "^2.2.0-beta.0",
         "source-map-support": "^0.5.19"
     },
     "devDependencies": {

@@ -10,12 +10,12 @@ module "iam" {
 module "lambda" {
   source = "./modules/lambda"
   source_dir = "../functions/dist"
-  archive_filepath = "../functions/dist/lambda.zip"
+  archive_filepath = "../functions/output/lambda.zip"
   dep_source_dir = "../layers/common-dependencies/"
   dep_archive_filepath = "../layers/common-dependencies/common-dependencies.zip"
   lambda_role_arn = module.iam.lambda_execution_role.arn
   subnet_ids = [for s in data.aws_subnet.private : s.id]
-  additional_security_group_ids = [module.sg.msk_sg_id]
+  additional_security_group_ids = [module.sg.lambda_sg_id]
   vpc_id = var.vpc_id
   kafka_brokers =  module.msk.cluster_ep
   region = var.region

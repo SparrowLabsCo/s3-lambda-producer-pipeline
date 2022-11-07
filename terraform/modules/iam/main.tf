@@ -1,9 +1,9 @@
-resource "aws_iam_policy" "iam-for-lambda-logs" {
-  name        = "iam-for-lambda-policy-logs"
+resource "aws_iam_policy" "iam-for-lambda" {
+  name        = "iam-for-lambda-policy"
   #path        = ""
   description = "IAM Policy for Lambda execution"
 
-  policy = data.aws_iam_policy_document.iam-for-lambda-logs.json
+  policy = data.aws_iam_policy_document.iam-for-lambda.json
 }
 
 resource "aws_iam_policy" "iam-for-lambda-ec2" {
@@ -14,16 +14,8 @@ resource "aws_iam_policy" "iam-for-lambda-ec2" {
   policy = data.aws_iam_policy_document.iam-for-lambda-ec2.json
 }
 
-resource "aws_iam_policy" "iam-for-lambda-msk" {
-  name        = "iam-for-lambda-policy-msk"
-  #path        = ""
-  description = "MSK IAM Policy for Lambda execution"
-
-  policy = data.aws_iam_policy_document.iam-for-lambda-msk.json
-}
-
-
-data "aws_iam_policy_document" "iam-for-lambda-logs" {
+data "aws_iam_policy_document" "iam-for-lambda" {
+  
   statement {
     sid = "AllowLambdaFunctionToCreateLogs"
     actions = [ 
@@ -34,24 +26,7 @@ data "aws_iam_policy_document" "iam-for-lambda-logs" {
       "arn:aws:logs:*:*:*",
     ]
   }
-}
 
-data "aws_iam_policy_document" "iam-for-lambda-ec2" {
-statement {
-    sid = "AllowLambdaFunctionExecuteEC2"
-    actions = [ 
-      "ec2:CreateNetworkInterface",
-      "ec2:DescribeNetworkInterfaces",
-      "ec2:DeleteNetworkInterface" 
-    ]
-    effect = "Allow"
-    resources = [ 
-      "*",
-    ]
-  }
-}
-
-data "aws_iam_policy_document" "iam-for-lambda-msk" {
   statement {
     sid = "AllowLambdaFunctionMSKCluster"
     actions = [ 
@@ -61,11 +36,11 @@ data "aws_iam_policy_document" "iam-for-lambda-msk" {
     ]
     effect = "Allow"
     resources = [ 
-      "${var.msk_arn}/*"
+      "${var.msk_arn}"
     ]
   }
 
-  statement {
+   statement {
     sid = "AllowLambdaFunctionMSKTopic"
     actions = [ 
       "kafka-cluster:*Topic*",
@@ -87,6 +62,21 @@ data "aws_iam_policy_document" "iam-for-lambda-msk" {
     effect = "Allow"
     resources = [ 
       "${var.msk_arn}/*"
+    ]
+  }
+}
+
+data "aws_iam_policy_document" "iam-for-lambda-ec2" {
+statement {
+    sid = "AllowLambdaFunctionExecuteEC2"
+    actions = [ 
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DeleteNetworkInterface" 
+    ]
+    effect = "Allow"
+    resources = [ 
+      "*",
     ]
   }
 }
@@ -119,15 +109,10 @@ resource "aws_iam_role" "lambda-execution-role" {
 
 resource "aws_iam_role_policy_attachment" "lambda-execution-role-attach" {
   role = aws_iam_role.lambda-execution-role.name
-  policy_arn = aws_iam_policy.iam-for-lambda-logs.arn
+  policy_arn = aws_iam_policy.iam-for-lambda.arn
 }
 
 resource "aws_iam_role_policy_attachment" "lambda-execution-role-attach-1" {
   role = aws_iam_role.lambda-execution-role.name
   policy_arn = aws_iam_policy.iam-for-lambda-ec2.arn
-}
-
-resource "aws_iam_role_policy_attachment" "lambda-execution-role-attach-2" {
-  role = aws_iam_role.lambda-execution-role.name
-  policy_arn = aws_iam_policy.iam-for-lambda-msk.arn
 }
