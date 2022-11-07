@@ -34,20 +34,25 @@ class KafkaLambda implements LambdaInterface {
     
         try {
             await producer.connect()
-            event.Records.forEach(async element => {
+
+            var element = event.Records[0];
+
+            var result = await producer.send(
+                {
+                    topic: 's3-events',
+                    messages: [{
+                        //key: element.s3.object.key,
+                        value: JSON.stringify(element.s3.object)
+                    }]
+                }
+            )
+
+            logger.info(`Event sent. ${result}`);
+            /*event.Records.forEach(async element => {
                 logger.info(`Streaming: ${JSON.stringify(element)}`);
-                var result = await producer.send(
-                    {
-                        topic: 's3-events',
-                        messages: [{
-                            key: element.s3.object.key,
-                            value: JSON.stringify(element)
-                        }]
-                    }
-                )
-    
-                logger.info(`Event sent. ${result}`);
-            });
+               
+            });*/
+            
         } catch (err: unknown) {
             logger.error(`ERROR: ${JSON.stringify(err)}`);
           
