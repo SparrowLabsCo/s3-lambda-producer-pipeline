@@ -8,19 +8,11 @@ class IndexLambda implements LambdaInterface {
     // Decorate your handler class method
     @logger.injectLambdaContext()
     public async handler(event: S3Event, context: Context): Promise<void> {
-        logger.info("executing function")
-        logger.info(`Event: ${JSON.stringify(event)}`);
+        
+        logger.info(`Function Executed: ${JSON.stringify(event)}`);
     
         event.Records.forEach(async element => {
-            logger.info(`S3 Record: ${JSON.stringify(
-                {
-                    topic: 's3-events',
-                    messages: [{
-                        key: element.s3.object.key,
-                        value: JSON.stringify(element)
-                    }]
-                })}`
-            )
+            logger.info(`S3 Record: ${JSON.stringify(element)}`)
         });
     }
 }
