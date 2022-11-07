@@ -11,6 +11,14 @@ variable "archive_filepath" {
     type = string
 }
 
+variable "dep_source_dir" {
+    type = string
+}
+
+variable "dep_archive_filepath" {
+    type = string
+}
+
 variable "subnet_ids" {
     type = list
 }

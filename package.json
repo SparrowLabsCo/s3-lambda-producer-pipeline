@@ -4,6 +4,9 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
+        "@aws-lambda-powertools/logger": "^1.4.0",
+        "@aws-lambda-powertools/metrics": "^1.4.0",
+        "@aws-lambda-powertools/tracer": "^1.4.0",
         "aws-sdk": "^2.437.0",
         "kafkajs": "^2.2.2",
         "source-map-support": "^0.5.19"
