@@ -40,16 +40,17 @@ data "aws_iam_policy_document" "iam-for-lambda" {
     ]
   }
 
-   statement {
-    sid = "AllowLambdaFunctionMSKTopic"
+  statement {
+    sid = "AllowLambdaFunctionMSKAll"
     actions = [ 
-      "kafka-cluster:*Topic*",
-      "kafka-cluster:WriteData",
-      "kafka-cluster:ReadData"
+      "kafka-cluster:*",
     ]
     effect = "Allow"
     resources = [ 
-      "${var.msk_arn}/*"
+      "arn:aws:kafka:*:479354618855:topic/*/*/*",
+      "arn:aws:kafka:*:479354618855:cluster/*/*",
+      "arn:aws:kafka:*:479354618855:group/*/*/*",
+      "arn:aws:kafka:*:479354618855:transactional-id/*/*/*"
     ]
   }
 

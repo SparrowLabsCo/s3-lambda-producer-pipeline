@@ -1,6 +1,7 @@
 import { Context, S3Event } from 'aws-lambda';
 import { Logger } from '@aws-lambda-powertools/logger'
 import { LambdaInterface } from '@aws-lambda-powertools/commons';
+import { Partitioners } from 'kafkajs';
 const { Kafka } = require('kafkajs')
 const { awsIamAuthenticator, Type } = require('@jm18457/kafkajs-msk-iam-authentication-mechanism')
 
@@ -19,10 +20,11 @@ const client = new Kafka({
 })
 
 const producer = client.producer({
-    //maxInFlightRequests: 1,
-    //idempotent: true,
-    //npm transactionalId: "s3-producer",
-    allowAutoTopicCreation: true
+    maxInFlightRequests: 1,
+    idempotent: true,
+    transactionalId: "s3-producer",
+    allowAutoTopicCreation: true,
+    createPartitioner: Partitioners.DefaultPartitioner
 })
 
 class KafkaLambda implements LambdaInterface {
@@ -52,7 +54,7 @@ class KafkaLambda implements LambdaInterface {
                 logger.info(`Streaming: ${JSON.stringify(element)}`);
                
             });*/
-            
+
         } catch (err: unknown) {
             logger.error(`ERROR: ${JSON.stringify(err)}`);
           
