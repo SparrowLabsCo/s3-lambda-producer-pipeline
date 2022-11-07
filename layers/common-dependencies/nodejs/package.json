@@ -12,6 +12,7 @@
     "@aws-lambda-powertools/logger": "^1.4.0",
     "@aws-lambda-powertools/metrics": "^1.4.0",
     "@aws-lambda-powertools/tracer": "^1.4.0",
-    "kafkajs": "^2.2.2"
+    "@jm18457/kafkajs-msk-iam-authentication-mechanism": "^2.0.2",
+    "kafkajs": "github:tulios/kafkajs#840-allow-injecting-authentication-mechanisms"
   }
 }

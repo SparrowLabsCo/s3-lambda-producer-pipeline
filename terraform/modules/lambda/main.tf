@@ -12,6 +12,9 @@ resource "aws_lambda_layer_version" "dependencies" {
   layer_name = "s3-terraform-lambda-dependencies"
   source_code_hash =  data.archive_file.dependencies_zip_file.output_base64sha256
   compatible_runtimes = ["nodejs16.x"]
+
+  compatible_architectures = [ "x86_64" ]
+
 }
 
 data "archive_file" "dependencies_zip_file" {
@@ -32,10 +35,11 @@ resource "aws_lambda_function" "lambda_s3_handler" {
     subnet_ids = var.subnet_ids
     security_group_ids = concat(var.additional_security_group_ids, [])
   }
-
+  
   environment {
     variables = {
       KAFKA_BROKERS = var.kafka_brokers
+      REGION        = var.region
     }
   }
 }

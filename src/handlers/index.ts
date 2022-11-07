@@ -1,15 +1,25 @@
 import { Context, S3Event } from 'aws-lambda';
-import { Kafka } from 'kafkajs'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { LambdaInterface } from '@aws-lambda-powertools/commons';
+const { Kafka, AuthenticationMechanisms } = require('kafkajs')
+const { Mechanism, Type } = require('@jm18457/kafkajs-msk-iam-authentication-mechanism')
+AuthenticationMechanisms[Type] = () => Mechanism
+
+AuthenticationMechanisms[Type] = () => Mechanism
 
 let logger = new Logger({ serviceName: "s3-terraform-lambda" });
 
 let broker: string = process.env.KAFKA_BROKERS ?? "localhost:9098";
 
-const client: Kafka = new Kafka({
+const client = new Kafka({
     clientId: "s3-terraform-lambda",
-    brokers: [broker]
+    brokers: [broker],
+  ssl: true,
+  sasl: {
+    mechanism: Type,
+    region: process.env.REGION,
+    ttl: process.env.TTL
+  }
 })
 
 const producer = client.producer({
@@ -26,6 +36,7 @@ class IndexLambda implements LambdaInterface {
         logger.info("executing function")
         logger.info(`Event: ${JSON.stringify(event)}`);
     
+        await producer.connect()
         event.Records.forEach(async element => {
             await producer.send(
                 {

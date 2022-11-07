@@ -7,3 +7,7 @@ variable "default_tags" {
 variable "region" {
     type = string
 }
+
+variable "msk_arn" {
+    type = string
+}

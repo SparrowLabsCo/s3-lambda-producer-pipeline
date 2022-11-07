@@ -40,3 +40,7 @@ variable "additional_security_group_ids" {
     type = list
     default = []
 }
+
+variable "region" {
+    type = string
+}

@@ -3,6 +3,7 @@ module "iam" {
   source = "./modules/iam"
   region = var.region
   default_tags = var.octo_tags
+  msk_arn = module.msk.cluster_arn
 }
 
 
@@ -17,6 +18,7 @@ module "lambda" {
   additional_security_group_ids = [module.sg.msk_sg_id]
   vpc_id = var.vpc_id
   kafka_brokers =  module.msk.cluster_ep
+  region = var.region
 
   depends_on = [
     module.sg,
@@ -27,7 +29,7 @@ module "lambda" {
 module "msk" {
   source = "./modules/kafka"
   subnet_ids = [for s in data.aws_subnet.private : s.id]
-  #additional_security_group_ids = []
+  additional_security_group_ids = [module.sg.msk_sg_id]
   vpc_id = var.vpc_id
   lambda_sg_id = module.sg.lambda_sg_id
 
