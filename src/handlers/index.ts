@@ -1,4 +1,4 @@
-import { S3Event } from 'aws-lambda';
+import { Context, S3Event } from 'aws-lambda';
 import { Kafka } from 'kafkajs'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { LambdaInterface } from '@aws-lambda-powertools/commons';
@@ -22,7 +22,7 @@ const producer = client.producer({
 class IndexLambda implements LambdaInterface {
     // Decorate your handler class method
     @logger.injectLambdaContext()
-    public async handler(event: S3Event, context: any): Promise<void> {
+    public async handler(event: S3Event, context: Context): Promise<void> {
         logger.info("executing function")
         logger.info(`Event: ${JSON.stringify(event)}`);
     
