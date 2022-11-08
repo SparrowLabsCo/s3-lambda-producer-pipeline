@@ -32,10 +32,11 @@ class KafkaLambda implements LambdaInterface {
 
            
             await admin.connect()
-            var topics = await admin.listTopics()
+            var cluster: any = await admin.describeCluster()
+            var brokerList = cluster.brokers.map((c:any) => ({ host: `${c.host}:${c.port}` }))
             await admin.disconnect()
 
-            logger.info(`Topics: ${topics.length}`);
+            logger.info(`Cluster Info: ${JSON.stringify(brokerList)}`);
           
             event.Records.forEach(async element => {
                 logger.info(`S3 Record: ${JSON.stringify(element)}`);
