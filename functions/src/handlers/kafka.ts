@@ -19,13 +19,7 @@ const client = new Kafka({
     }
 })
 
-const producer = client.producer({
-    maxInFlightRequests: 1,
-    idempotent: true,
-    transactionalId: "s3-producer",
-    allowAutoTopicCreation: true,
-    createPartitioner: Partitioners.DefaultPartitioner
-})
+const admin = client.admin()
 
 class KafkaLambda implements LambdaInterface {
     // Decorate your handler class method
@@ -35,25 +29,18 @@ class KafkaLambda implements LambdaInterface {
         logger.info(`Function Executed`);
     
         try {
-            await producer.connect()
 
-            var element = event.Records[0];
+           
+            await admin.connect()
+            var topics = await admin.listTopics()
+            await admin.disconnect()
 
-            var result = await producer.send(
-                {
-                    topic: 's3-events',
-                    messages: [{
-                        //key: element.s3.object.key,
-                        value: JSON.stringify(element.s3.object)
-                    }]
-                }
-            )
-
-            logger.info(`Event sent. ${result}`);
-            /*event.Records.forEach(async element => {
-                logger.info(`Streaming: ${JSON.stringify(element)}`);
+            logger.info(`Topics: ${topics.length}`);
+          
+            event.Records.forEach(async element => {
+                logger.info(`S3 Record: ${JSON.stringify(element)}`);
                
-            });*/
+            });
 
         } catch (err: unknown) {
             logger.error(`ERROR: ${JSON.stringify(err)}`);
