@@ -1,7 +1,7 @@
 import { Context, S3Event } from 'aws-lambda';
 import { Logger } from '@aws-lambda-powertools/logger'
 import { LambdaInterface } from '@aws-lambda-powertools/commons';
-import { Partitioners } from 'kafkajs';
+import { logLevel, Partitioners } from 'kafkajs';
 const { Kafka } = require('kafkajs')
 const { awsIamAuthenticator, Type } = require('@jm18457/kafkajs-msk-iam-authentication-mechanism')
 
@@ -10,6 +10,7 @@ let logger = new Logger({ serviceName: "s3-terraform-lambda" });
 let broker: string = process.env.KAFKA_BROKERS ?? "localhost:9098";
 
 const client = new Kafka({
+    logLevel: logLevel.DEBUG,
     clientId: "s3-terraform-lambda",
     brokers: [broker],
     ssl: true,
@@ -36,7 +37,7 @@ class KafkaLambda implements LambdaInterface {
             var brokerList = cluster.brokers.map((c:any) => ({ host: `${c.host}:${c.port}` })).flatMap((x:any)=>x.host)
             await admin.disconnect()
 
-            logger.info(`Cluster Info: ${JSON.stringify(brokerList)}`);
+            logger.info(`Broker Info: ${JSON.stringify(brokerList)}`);
           
             event.Records.forEach(async element => {
                 logger.info(`S3 Record: ${JSON.stringify(element)}`);
