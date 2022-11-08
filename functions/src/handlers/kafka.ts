@@ -33,7 +33,7 @@ class KafkaLambda implements LambdaInterface {
            
             await admin.connect()
             var cluster: any = await admin.describeCluster()
-            var brokerList = cluster.brokers.map((c:any) => ({ host: `${c.host}:${c.port}` }))
+            var brokerList = cluster.brokers.map((c:any) => ({ host: `${c.host}:${c.port}` })).flatMap((x:any)=>x.host)
             await admin.disconnect()
 
             logger.info(`Cluster Info: ${JSON.stringify(brokerList)}`);
