@@ -49,3 +49,8 @@ variable "region" {
 variable "input_bucket_arn" {
     type = string
 }
+
+
+variable "crawler_name" {
+    type = string
+}

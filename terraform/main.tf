@@ -5,9 +5,11 @@ module "iam" {
   default_tags = var.octo_tags
   
   bucket_arns = [
-    module.s3.input_bucket_arn,
-    module.s3.output_bucket_arn
+    "${module.s3.input_bucket_arn}/*",
+    "${module.s3.input_bucket_arn}/data/*",
+    "${module.s3.output_bucket_arn}/*"
   ]
+
   input_sqs_queue = module.sqs.input_processing_queue_arn
 }
 
@@ -32,7 +34,7 @@ module "lambda" {
   subnet_ids = [for s in data.aws_subnet.private : s.id]
   additional_security_group_ids = [module.sg.lambda_sg_id]
   vpc_id = var.vpc_id
-  
+  crawler_name = module.s3.crawler_name
   region = var.region
   input_bucket_arn =  module.s3.input_bucket_arn
 

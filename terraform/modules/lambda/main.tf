@@ -40,6 +40,7 @@ resource "aws_lambda_function" "lambda_s3_handler" {
     variables = {
       KAFKA_BROKERS = var.kafka_brokers
       REGION        = var.region
+      CRAWLER_NAME  = var.crawler_name
     }
   }
 }

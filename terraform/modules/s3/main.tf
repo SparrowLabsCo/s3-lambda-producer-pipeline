@@ -58,6 +58,6 @@ resource "aws_glue_crawler" "crawler" {
   role = var.glue_role
 
   s3_target {
-    path = aws_s3_bucket.input_bucket.arn
+    path = aws_s3_bucket.input_bucket.bucket
   }
 }

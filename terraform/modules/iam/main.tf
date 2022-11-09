@@ -172,6 +172,11 @@ resource "aws_iam_role_policy_attachment" "lambda-execution-role-attach-1" {
   policy_arn = aws_iam_policy.iam-for-lambda-ec2.arn
 }
 
+resource "aws_iam_role_policy_attachment" "lambda-execution-role-attach-2" {
+  role = aws_iam_role.lambda-execution-role.name
+  policy_arn = aws_iam_policy.iam-for-s3-access.arn
+}
+
 resource "aws_iam_role_policy_attachment" "glue-service-role-attach" {
   role = aws_iam_role.glue-role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"

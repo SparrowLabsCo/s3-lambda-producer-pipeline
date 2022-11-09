@@ -1,6 +1,7 @@
 import { Context, S3Event } from 'aws-lambda';
-import { StartCrawlerRequest, StartCrawlerResponse} from 'aws-sdk/clients/glue';
+import { StartCrawlerRequest } from 'aws-sdk/clients/glue';
 import { Glue } from 'aws-sdk';
+import "source-map-support/register";
 
 import { Logger } from '@aws-lambda-powertools/logger'
 import { LambdaInterface } from '@aws-lambda-powertools/commons';
@@ -28,9 +29,17 @@ class IndexLambda implements LambdaInterface {
             Name: process.env.CRAWLER_NAME ?? ""
         }
 
-        const response = glue.startCrawler(request)
 
-        logger.info(` ${JSON.stringify(response)}`)
+        try {
+            const r = await glue.startCrawler(request).promise();
+
+            logger.info(` ${JSON.stringify(r)}`)
+        } catch (e: unknown) {
+            logger.error(`${JSON.stringify(e)}`)
+        }
+
+        logger.info("Exiting.")
+
     }
 }
 
