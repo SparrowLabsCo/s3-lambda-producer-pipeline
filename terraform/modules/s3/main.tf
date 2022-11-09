@@ -57,6 +57,18 @@ resource "aws_glue_crawler" "crawler" {
   database_name = aws_glue_catalog_database.aws_glue_catalog_database.name
   role = var.glue_role
 
+  configuration = jsonencode(
+    {
+      Grouping = {
+        TableGroupingPolicy = "CombineCompatibleSchemas"
+      }
+      CrawlerOutput = {
+        Partitions = { AddOrUpdateBehavior = "InheritFromTable" }
+      }
+      Version = 1
+    }
+  )
+
   s3_target {
     path = aws_s3_bucket.input_bucket.bucket
   }
