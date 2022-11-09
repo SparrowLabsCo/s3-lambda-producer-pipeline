@@ -56,7 +56,7 @@ resource "aws_glue_crawler" "crawler" {
   name = "crawler-${random_string.random.result}"
   database_name = aws_glue_catalog_database.aws_glue_catalog_database.name
   role = var.glue_role
-
+  table_prefix = "_"
   configuration = jsonencode(
     {
       Grouping = {
@@ -70,6 +70,6 @@ resource "aws_glue_crawler" "crawler" {
   )
 
   s3_target {
-    path = aws_s3_bucket.input_bucket.bucket
+    path = "${aws_s3_bucket.input_bucket.bucket}/patients"
   }
 }
