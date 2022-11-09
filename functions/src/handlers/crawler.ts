@@ -10,7 +10,7 @@ let logger = new Logger({ serviceName: "s3-terraform-lambda" });
 
 const glue = new Glue();
 
-class IndexLambda implements LambdaInterface {
+class CrawlerLambda implements LambdaInterface {
 
     
     // Decorate your handler class method
@@ -43,5 +43,5 @@ class IndexLambda implements LambdaInterface {
     }
 }
 
-const functionExport = new IndexLambda();
+const functionExport = new CrawlerLambda();
 export const handler = functionExport.handler.bind(functionExport);

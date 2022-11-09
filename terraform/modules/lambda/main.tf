@@ -27,7 +27,7 @@ resource "aws_lambda_function" "lambda_s3_handler" {
   function_name    = "process-s3-new-objects"
   filename         = data.archive_file.lambda_zip_file.output_path
   source_code_hash = data.archive_file.lambda_zip_file.output_base64sha256
-  handler          = "index.handler"
+  handler          = "crawler.handler"
   role             = var.lambda_role_arn
   runtime          = var.runtime
   layers           = ["${aws_lambda_layer_version.dependencies.arn}"]
