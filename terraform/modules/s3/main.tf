@@ -13,12 +13,17 @@ resource "aws_s3_bucket" "input_bucket" {
 }
 
 resource "aws_s3_bucket" "output_bucket" {
-  bucket = "input-bucket-${terraform.workspace}-${random_string.random.result}"
+  bucket = "output-bucket-${terraform.workspace}-${random_string.random.result}"
   force_destroy = true
 }
 
 resource "aws_s3_bucket_acl" "input_bucket_acl" {
   bucket = aws_s3_bucket.input_bucket.id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_acl" "output_bucket_acl" {
+  bucket = aws_s3_bucket.output_bucket.id
   acl    = "private"
 }
 
@@ -37,14 +42,24 @@ resource "aws_cloudwatch_event_rule" "glue-crawler-state-change" {
   description = "Glue Crawler State Change Event"
   is_enabled = true
   
-  event_pattern = <<EOP
+  event_pattern = <<EOF
   {
-    "crawlerName": ["${aws_glue_crawler.crawler.name}"],
-    "state": [
+    "detail-type": [
+      "Glue Crawler State Change"
+    ],
+    "source": [
+      "aws.glue"
+    ],
+    "detail": {
+      "crawlerName": [
+        "${aws_glue_crawler.crawler.name}"
+      ],
+      "state": [
         "Succeeded"
-    ]
+      ]
+    }
   }
-  EOP
+  EOF
 
 }
 
@@ -69,7 +84,7 @@ resource "aws_glue_crawler" "crawler" {
   name = "crawler-${random_string.random.result}"
   database_name = aws_glue_catalog_database.aws_glue_catalog_database.name
   role = var.glue_role
-  table_prefix = "_"
+  table_prefix = "${random_string.random.result}-"
   configuration = jsonencode(
     {
       Grouping = {
