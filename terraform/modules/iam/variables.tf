@@ -8,6 +8,10 @@ variable "region" {
     type = string
 }
 
-variable "msk_arn" {
+variable "bucket_arns" {
+    type = list
+}
+
+variable "input_sqs_queue" {
     type = string
 }

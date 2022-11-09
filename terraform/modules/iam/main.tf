@@ -14,12 +14,53 @@ resource "aws_iam_policy" "iam-for-lambda-ec2" {
   policy = data.aws_iam_policy_document.iam-for-lambda-ec2.json
 }
 
+resource "aws_iam_policy" "iam-for-s3-access" {
+  name        = "iam-for-s3-access"
+  #path        = ""
+  description = "S3 IAM Policy"
+
+  policy = data.aws_iam_policy_document.s3-access.json
+}
+
+
+data "aws_iam_policy_document" "s3-access" {
+  
+  statement {
+      sid = "s3-access"
+      effect = "Allow"
+      actions = [
+          "s3:*"
+      ]
+      resources = var.bucket_arns
+  }
+}
+
 data "aws_iam_policy_document" "iam-for-lambda" {
   
   statement {
+      sid = "gluePermissions"
+      effect = "Allow"
+      actions = [
+          "glue:CreateJob",
+          "glue:CreateTable",
+          "glue:StartCrawler",
+          "glue:CreateDatabase",
+          "glue:StartJobRun",
+          "glue:StopCrawler",
+          "glue:CreatePartition",
+          "glue:GetJob",
+          "glue:StartTrigger",
+          "glue:CreateCrawler"
+      ]
+      resources = ["*"]
+  }
+
+  statement {
     sid = "AllowLambdaFunctionToCreateLogs"
     actions = [ 
-      "logs:*" 
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
     ]
     effect = "Allow"
     resources = [ 
@@ -28,41 +69,28 @@ data "aws_iam_policy_document" "iam-for-lambda" {
   }
 
   statement {
-    sid = "AllowLambdaFunctionMSKCluster"
-    actions = [ 
-      "kafka-cluster:Connect",
-      "kafka-cluster:AlterCluster",
-      "kafka-cluster:DescribeCluster"
-    ]
+    sid = "IAMRole"
     effect = "Allow"
-    resources = [ 
-      "${var.msk_arn}"
+    actions = [
+        "iam:PassRole"
+    ]
+    resources = [
+      aws_iam_role.glue-role.arn
     ]
   }
 
   statement {
-    sid = "AllowLambdaFunctionMSKAll"
-    actions = [ 
-      "kafka-cluster:*",
-    ]
+    sid = "AllowSQS"
     effect = "Allow"
-    resources = [ 
-      "arn:aws:kafka:*:479354618855:topic/*/*/*",
-      "arn:aws:kafka:*:479354618855:cluster/*/*",
-      "arn:aws:kafka:*:479354618855:group/*/*/*",
-      "arn:aws:kafka:*:479354618855:transactional-id/*/*/*"
+    actions = [
+      "sqs:DeleteMessage",
+      "sqs:ListQueues",
+      "sqs:ReceiveMessage",
+      "sqs:SendMessage",
+      "sqs:GetQueueAttributes"
     ]
-  }
-
-  statement {
-    sid = "AllowLambdaFunctionMSKGroup"
-    actions = [ 
-      "kafka-cluster:AlterGroup",
-      "kafka-cluster:DescribeGroup"
-    ]
-    effect = "Allow"
-    resources = [ 
-      "${var.msk_arn}/*"
+    resources = [
+      var.input_sqs_queue
     ]
   }
 }
@@ -108,6 +136,32 @@ resource "aws_iam_role" "lambda-execution-role" {
 
 }
 
+resource "aws_iam_role" "glue-role" {
+  name                = "glue-role"
+  #path                = ""
+  description         = "Service Role for Glue"
+  assume_role_policy  = <<-EOP
+  {
+
+    "Version":"2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+               "Service": "glue.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole",
+            "Condition" : {}
+        }
+    ]
+
+  }
+  EOP
+
+  tags = var.default_tags
+
+}
+
 resource "aws_iam_role_policy_attachment" "lambda-execution-role-attach" {
   role = aws_iam_role.lambda-execution-role.name
   policy_arn = aws_iam_policy.iam-for-lambda.arn
@@ -116,4 +170,14 @@ resource "aws_iam_role_policy_attachment" "lambda-execution-role-attach" {
 resource "aws_iam_role_policy_attachment" "lambda-execution-role-attach-1" {
   role = aws_iam_role.lambda-execution-role.name
   policy_arn = aws_iam_policy.iam-for-lambda-ec2.arn
+}
+
+resource "aws_iam_role_policy_attachment" "glue-service-role-attach" {
+  role = aws_iam_role.glue-role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
+}
+
+resource "aws_iam_role_policy_attachment" "glue-service-role-attach-1" {
+  role = aws_iam_role.glue-role.name
+  policy_arn = aws_iam_policy.iam-for-s3-access.arn
 }

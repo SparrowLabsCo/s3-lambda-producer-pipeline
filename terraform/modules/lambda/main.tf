@@ -27,7 +27,7 @@ resource "aws_lambda_function" "lambda_s3_handler" {
   function_name    = "process-s3-new-objects"
   filename         = data.archive_file.lambda_zip_file.output_path
   source_code_hash = data.archive_file.lambda_zip_file.output_base64sha256
-  handler          = "kafka.handler"
+  handler          = "index.handler"
   role             = var.lambda_role_arn
   runtime          = var.runtime
   layers           = ["${aws_lambda_layer_version.dependencies.arn}"]
@@ -55,32 +55,9 @@ resource "aws_lambda_permission" "allow_bucket_invoke_lambda" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda_s3_handler.arn
   principal     = "s3.amazonaws.com"
-  source_arn    = aws_s3_bucket.input_bucket.arn
+  source_arn    = var.input_bucket_arn
 }
 
-resource "aws_s3_bucket" "input_bucket" {
-  bucket = "input-bucket-${terraform.workspace}-${random_string.random.result}"
-  force_destroy = true
-}
-
-resource "aws_s3_bucket_acl" "input_bucket_acl" {
-  bucket = aws_s3_bucket.input_bucket.id
-  acl    = "private"
-}
-
-resource "aws_s3_bucket_notification" "bucket_notification" {
-  bucket = aws_s3_bucket.input_bucket.id
-
-  lambda_function {
-    lambda_function_arn = aws_lambda_function.lambda_s3_handler.arn
-    events              = ["s3:ObjectCreated:*"]
-  }
-
-  depends_on = [aws_lambda_permission.allow_bucket_invoke_lambda]
-}
-
-
-output "input_bucket" {
-  value       = aws_s3_bucket.input_bucket.bucket
-  description = "The name of the bucket for file input."
+output input_s3_lambda_arn {
+  value = aws_lambda_function.lambda_s3_handler.arn
 }

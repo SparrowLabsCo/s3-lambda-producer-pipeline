@@ -29,6 +29,7 @@ variable "vpc_id" {
 
 variable "kafka_brokers" {
     type = string
+    default = ""
 }
 
 variable "runtime" {
@@ -42,5 +43,9 @@ variable "additional_security_group_ids" {
 }
 
 variable "region" {
+    type = string
+}
+
+variable "input_bucket_arn" {
     type = string
 }

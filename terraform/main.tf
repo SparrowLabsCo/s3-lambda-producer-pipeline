@@ -3,9 +3,23 @@ module "iam" {
   source = "./modules/iam"
   region = var.region
   default_tags = var.octo_tags
-  msk_arn = module.msk.cluster_arn
+  
+  bucket_arns = [
+    module.s3.input_bucket_arn,
+    module.s3.output_bucket_arn
+  ]
+  input_sqs_queue = module.sqs.input_processing_queue_arn
 }
 
+module "s3" {
+  source = "./modules/s3"
+  lambda_s3_handler_arn = module.lambda.input_s3_lambda_arn
+}
+
+module "sqs" {
+  source = "./modules/sqs"
+  tags = var.octo_tags
+}
 
 module "lambda" {
   source = "./modules/lambda"
@@ -17,21 +31,9 @@ module "lambda" {
   subnet_ids = [for s in data.aws_subnet.private : s.id]
   additional_security_group_ids = [module.sg.lambda_sg_id]
   vpc_id = var.vpc_id
-  kafka_brokers =  module.msk.cluster_ep
+  
   region = var.region
-
-  depends_on = [
-    module.sg,
-    module.msk
-  ]
-}
-
-module "msk" {
-  source = "./modules/kafka"
-  subnet_ids = [for s in data.aws_subnet.private : s.id]
-  additional_security_group_ids = [module.sg.msk_sg_id]
-  vpc_id = var.vpc_id
-  lambda_sg_id = module.sg.lambda_sg_id
+  input_bucket_arn =  module.s3.input_bucket_arn
 
   depends_on = [
     module.sg
