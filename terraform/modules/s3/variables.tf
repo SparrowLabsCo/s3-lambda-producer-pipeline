@@ -1,4 +1,4 @@
-variable lambda_s3_handler_arn {
+variable crawler_s3_handler_arn {
     type = string
 }
 

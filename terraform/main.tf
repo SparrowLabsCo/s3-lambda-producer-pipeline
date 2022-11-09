@@ -15,7 +15,7 @@ module "iam" {
 
 module "s3" {
   source = "./modules/s3"
-  lambda_s3_handler_arn = module.lambda.input_s3_lambda_arn
+  crawler_s3_handler_arn = module.lambda.crawler_lambda_arn
   glue_role = module.iam.glue_role.arn
 }
 
@@ -36,7 +36,8 @@ module "lambda" {
   vpc_id = var.vpc_id
   crawler_name = module.s3.crawler_name
   region = var.region
-  input_bucket_arn =  module.s3.input_bucket_arn
+  input_bucket_arn = module.s3.input_bucket_arn
+  output_bucket_arn = module.s3.output_bucket_arn
 
   depends_on = [
     module.sg
