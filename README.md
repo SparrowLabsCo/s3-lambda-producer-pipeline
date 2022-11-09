@@ -2,8 +2,6 @@
 
 The Terraform template deploys a Lambda function, an S3 bucket and the IAM resources required to run the application. A Lambda function consumes <code>ObjectCreated</code> events from an Amazon S3 bucket. The Lambda code checks the uploaded file and logs the event.
 
-Experimental support added for sending to MSK Serverless.  Example is not currently working due to in-flight changes to the IAM authentication mechanism in KafkaJS.
-
 ## Notes
 
 1.  This blueprint will create a vpc as part of the deployment unless `vpc_id` is passsd as a variable to terraform commands.
