@@ -14,6 +14,7 @@ module "iam" {
 module "s3" {
   source = "./modules/s3"
   lambda_s3_handler_arn = module.lambda.input_s3_lambda_arn
+  glue_role = module.iam.glue_role.arn
 }
 
 module "sqs" {

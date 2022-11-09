@@ -35,6 +35,8 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 resource "aws_cloudwatch_event_rule" "glue-crawler-state-change" {
   name        = "glue-crawler-state-change"
   description = "Glue Crawler State Change Event"
+  is_enabled = true
+  
   event_pattern = <<EOP
   {
     "crawlerName": [
@@ -48,4 +50,18 @@ resource "aws_cloudwatch_event_rule" "glue-crawler-state-change" {
   }
   EOP
 
+}
+
+resource "aws_glue_catalog_database" "aws_glue_catalog_database" {
+  name = "raw_catalog_${random_string.random.result}"
+}
+
+resource "aws_glue_crawler" "crawler" {
+  name = "crawler-${random_string.random.result}"
+  database_name = aws_glue_catalog_database.aws_glue_catalog_database.name
+  role = var.glue_role
+
+  s3_target {
+    path = aws_s3_bucket.input_bucket.arn
+  }
 }
