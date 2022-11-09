@@ -32,3 +32,20 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 
 }
 
+resource "aws_cloudwatch_event_rule" "glue-crawler-state-change" {
+  name        = "glue-crawler-state-change"
+  description = "Glue Crawler State Change Event"
+  event_pattern = <<EOP
+  {
+    "crawlerName": [
+        {
+            "Ref": "crawlerName"
+        }
+    ],
+    "state": [
+        "Succeeded"
+    ]
+  }
+  EOP
+
+}
