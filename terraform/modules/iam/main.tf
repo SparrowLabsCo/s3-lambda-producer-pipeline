@@ -26,7 +26,7 @@ resource "aws_iam_policy" "iam-for-s3-access" {
 data "aws_iam_policy_document" "s3-access" {
   
   statement {
-      sid = "s3-access"
+      sid = "s3Access"
       effect = "Allow"
       actions = [
           "s3:*"

@@ -39,11 +39,7 @@ resource "aws_cloudwatch_event_rule" "glue-crawler-state-change" {
   
   event_pattern = <<EOP
   {
-    "crawlerName": [
-        {
-            "Ref": "crawlerName"
-        }
-    ],
+    "crawlerName": ["${aws_glue_crawler.crawler.name}"],
     "state": [
         "Succeeded"
     ]
