@@ -17,6 +17,7 @@ module "s3" {
   source = "./modules/s3"
   crawler_s3_handler_arn = module.lambda.crawler_lambda_arn
   glue_role = module.iam.glue_role.arn
+  conversion_lambda_function_arn = module.lambda.conversion_s3_lambda_arn
 }
 
 module "sqs" {

@@ -5,3 +5,7 @@ variable crawler_s3_handler_arn {
 variable glue_role {
     type = string
 }
+
+variable conversion_lambda_function_arn {
+    type = string
+}

@@ -45,7 +45,7 @@ resource "aws_lambda_function" "crawler_s3_handler" {
   }
 }
 
-resource "aws_lambda_function" "conversion_handler" {
+resource "aws_lambda_function" "conversion_s3_handler" {
   function_name    = "convert-s3-data"
   filename         = data.archive_file.lambda_zip_file.output_path
   source_code_hash = data.archive_file.lambda_zip_file.output_base64sha256
@@ -71,7 +71,7 @@ data "archive_file" "lambda_zip_file" {
   output_path = var.archive_filepath
 }
 
-resource "aws_lambda_permission" "allow_crawler_invoke_lambda" {
+resource "aws_lambda_permission" "allow_crawler_s3_lambda" {
   statement_id  = "AllowExecutionFromS3Bucket"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.crawler_s3_handler.arn
@@ -79,7 +79,7 @@ resource "aws_lambda_permission" "allow_crawler_invoke_lambda" {
   source_arn    = var.input_bucket_arn
 }
 
-resource "aws_lambda_permission" "allow_conversion_invoke_lambda" {
+resource "aws_lambda_permission" "allow_conversion_s3_lambda" {
   statement_id  = "AllowExecutionFromS3Bucket"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.conversion_s3_handler.arn
@@ -91,6 +91,6 @@ output crawler_lambda_arn {
   value = aws_lambda_function.crawler_s3_handler.arn
 }
 
-output convrsion_s3_lambda_arn {
+output conversion_s3_lambda_arn {
   value = aws_lambda_function.conversion_s3_handler.arn
 }

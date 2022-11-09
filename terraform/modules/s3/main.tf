@@ -48,6 +48,19 @@ resource "aws_cloudwatch_event_rule" "glue-crawler-state-change" {
 
 }
 
+resource "aws_cloudwatch_event_target" "conversion-lambda-target" {
+  arn = var.conversion_lambda_function_arn
+  rule = aws_cloudwatch_event_rule.glue-crawler-state-change.name
+}
+
+resource "aws_lambda_permission" "allow-cloudwatch-to-call-conversion-lambda" {
+  statement_id = "AllowExecutionFromCloudWatch"
+  action = "lambda:InvokeFunction"
+  function_name = var.conversion_lambda_function_arn
+  principal = "events.amazonaws.com"
+  source_arn = aws_cloudwatch_event_rule.glue-crawler-state-change.arn
+}
+
 resource "aws_glue_catalog_database" "aws_glue_catalog_database" {
   name = "raw_catalog_${random_string.random.result}"
 }
