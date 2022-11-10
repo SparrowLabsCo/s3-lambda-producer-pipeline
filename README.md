@@ -24,6 +24,6 @@ When we upload an object to S3, this will trigger the Lambda function which will
 
 ## Testing
 
-After deployment, create a folder named patients and upload a CSV formatted file to the S3. Go to the CloudWatch Logs for the deployed Lambda function. You will see the event is logged out containing the Object data.  Go to the AWS Glue catalog to see the crawler status and tables created
+After deployment, create a folder named `patients` in the S3 input bucket and upload the patients.csv file from the `data/` folder. Go to the CloudWatch Logs for the deployed Lambda function. You will see the event is logged out containing the Object data.  Go to the AWS Glue catalog to see the crawler status and tables created.
 
 
