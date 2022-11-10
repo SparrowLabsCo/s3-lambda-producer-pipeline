@@ -17,6 +17,11 @@ resource "aws_s3_bucket" "output_bucket" {
   force_destroy = true
 }
 
+resource "aws_s3_bucket" "glue_bucket" {
+  bucket = "glue-bucket-${terraform.workspace}-${random_string.random.result}"
+  force_destroy = true
+}
+
 resource "aws_s3_bucket_acl" "input_bucket_acl" {
   bucket = aws_s3_bucket.input_bucket.id
   acl    = "private"
@@ -24,6 +29,11 @@ resource "aws_s3_bucket_acl" "input_bucket_acl" {
 
 resource "aws_s3_bucket_acl" "output_bucket_acl" {
   bucket = aws_s3_bucket.output_bucket.id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_acl" "glue_bucket_acl" {
+  bucket = aws_s3_bucket.glue_bucket.id
   acl    = "private"
 }
 
@@ -98,6 +108,22 @@ resource "aws_glue_crawler" "crawler" {
   )
 
   s3_target {
-    path = "${aws_s3_bucket.input_bucket.bucket}/patients"
+    path = "s3://${aws_s3_bucket.input_bucket.bucket}/patients"
   }
+}
+
+data "template_file" "glue_job_transform" {
+  template = "${file("${path.module}/scripts/transform.py")}"
+  vars = {
+    glue_catalog_database   = aws_glue_catalog_database.aws_glue_catalog_database.name
+    glue_catalog_table      = "${random_string.random.result}-patients"
+    target_s3               = "s3://${aws_s3_bucket.output_bucket.bucket}/patients/"
+  }
+}
+
+resource "aws_s3_object" "glue_transform_job" {
+  bucket = aws_s3_bucket.glue_bucket.bucket
+  key = "scripts/transform.py"
+  
+  content = data.template_file.glue_job_transform.rendered
 }
