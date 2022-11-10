@@ -127,3 +127,31 @@ resource "aws_s3_object" "glue_transform_job" {
   
   content = data.template_file.glue_job_transform.rendered
 }
+
+resource "aws_glue_job" "transform_job" {
+  name         = "transform_job"
+  description  = "Transformation Job"
+  role_arn     = "${var.glue_role}"
+  number_of_workers = 3
+  max_retries  = 1
+  timeout      = 10
+  glue_version = "3.0"
+  worker_type  = "G.1X"
+
+  command {
+    script_location = "s3://${aws_s3_bucket.glue_bucket.bucket}/scripts/transform.py"
+    python_version  = "3"
+  }
+
+  default_arguments = {    
+    "--job-language"          = "python"
+    "--ENV"                   = "env"
+    "--spark-event-logs-path" = "s3://${aws_s3_bucket.glue_bucket.bucket}/spark-logs/"
+    "--job-bookmark-option"   = "job-bookmark-enable"
+    "--enable-spark-ui"       = "true"
+  }
+
+  execution_property {
+    max_concurrent_runs = 1
+  }
+}

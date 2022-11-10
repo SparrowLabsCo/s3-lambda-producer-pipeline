@@ -6,8 +6,9 @@ module "iam" {
   
   bucket_arns = [
     "${module.s3.input_bucket_arn}/*",
-    "${module.s3.input_bucket_arn}/data/*",
-    "${module.s3.output_bucket_arn}/*"
+    //"${module.s3.input_bucket_arn}/data/*",
+    "${module.s3.output_bucket_arn}/*",
+    "${module.s3.glue_bucket_arn}/*"
   ]
 
   input_sqs_queue = module.sqs.input_processing_queue_arn

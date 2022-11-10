@@ -10,6 +10,12 @@ output "output_bucket_arn" {
   description = "The name of the bucket for parquet output."
 }
 
+
+output "glue_bucket_arn" {
+  value       = aws_s3_bucket.glue_bucket.arn
+  description = "The name of the bucket for glue."
+}
+
 output "crawler_name" {
   value = aws_glue_crawler.crawler.name
 }
