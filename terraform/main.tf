@@ -40,7 +40,8 @@ module "lambda" {
   region = var.region
   input_bucket_arn = module.s3.input_bucket_arn
   output_bucket_arn = module.s3.output_bucket_arn
-
+  job_name = module.s3.job_name
+  
   depends_on = [
     module.sg
   ]

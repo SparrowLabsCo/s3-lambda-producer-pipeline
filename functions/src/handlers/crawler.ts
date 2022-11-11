@@ -6,7 +6,7 @@ import "source-map-support/register";
 import { Logger } from '@aws-lambda-powertools/logger'
 import { LambdaInterface } from '@aws-lambda-powertools/commons';
 
-let logger = new Logger({ serviceName: "s3-terraform-lambda" });
+let logger = new Logger({ serviceName: "s3-terraform-lambda.crawler" });
 
 const glue = new Glue();
 

@@ -60,7 +60,7 @@ resource "aws_lambda_function" "conversion_s3_handler" {
   
   environment {
     variables = {
-      JOB_NAME  = var.crawler_name
+      JOB_NAME  = var.job_name
     }
   }
 }

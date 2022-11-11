@@ -19,3 +19,7 @@ output "glue_bucket_arn" {
 output "crawler_name" {
   value = aws_glue_crawler.crawler.name
 }
+
+output "job_name" {
+  value = aws_glue_job.transform_job.name
+}

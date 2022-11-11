@@ -5,7 +5,7 @@ import { logLevel, Partitioners } from 'kafkajs';
 const { Kafka } = require('kafkajs')
 const { awsIamAuthenticator, Type } = require('@jm18457/kafkajs-msk-iam-authentication-mechanism')
 
-let logger = new Logger({ serviceName: "s3-terraform-lambda" });
+let logger = new Logger({ serviceName: "s3-terraform-lambda.kafka" });
 
 let broker: string = process.env.KAFKA_BROKERS ?? "localhost:9098";
 
