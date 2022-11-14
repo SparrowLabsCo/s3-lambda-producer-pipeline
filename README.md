@@ -1,6 +1,8 @@
 # AWS S3 to AWS Lambda
 
-The Terraform template deploys a Lambda function, an S3 bucket and the IAM resources required to run the application. A Lambda function consumes <code>ObjectCreated</code> events from an Amazon S3 bucket. The Lambda code checks the uploaded file and logs the event.
+The Terraform template deploys a data producer using a series of Lambda functions, S3 buckets, EventBridge rules, and IAM resources required to run the application. 
+
+A Lambda function consumes `ObjectCreated` events from an Amazon S3 bucket to start a glue crawler generating a data catalog.  An Eventbridge rule is used to trigger a Lambda to start the transform job which converts a CSV file into snappy parquet format file and saves to an output bucket.
 
 ## Notes
 
@@ -20,10 +22,10 @@ The Terraform template deploys a Lambda function, an S3 bucket and the IAM resou
 
 ## How it works
 
-When we upload an object to S3, this will trigger the Lambda function which will output the event as a log.
+When we upload an object to S3, this will trigger the Lambda function which will start the data pipeline.
 
 ## Testing
 
-After deployment, create a folder named `patients` in the S3 input bucket and upload the patients.csv file from the `data/` folder. Go to the CloudWatch Logs for the deployed Lambda function. You will see the event is logged out containing the Object data.  Go to the AWS Glue catalog to see the crawler status and tables created.
+After deployment, create a folder named `patients` in the S3 input bucket and upload the patients.csv file from the `data/` folder. Go to the CloudWatch Logs for the deployed Lambda function. You will see the event is logged out containing the Object data.  Go to the AWS Glue catalog to see the crawler status and tables created.  You can check the output bucket after approximately 5 minutes.
 
 
