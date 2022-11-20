@@ -1,4 +1,5 @@
-# AWS S3 to AWS Lambda
+# s3-lambda-producer-pipeline
+
 
 The Terraform template deploys a data producer using a series of Lambda functions, S3 buckets, EventBridge rules, and IAM resources required to run the application. 
 
