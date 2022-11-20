@@ -117,7 +117,7 @@ data "template_file" "glue_job_transform" {
   vars = {
     glue_catalog_database   = aws_glue_catalog_database.aws_glue_catalog_database.name
     glue_catalog_table      = "${random_string.random.result}-patients"
-    target_s3               = "s3://${aws_s3_bucket.output_bucket.bucket}/patients/"
+    target_s3               = "s3://${aws_s3_bucket.output_bucket.bucket}/patients/_raw/"
   }
 }
 
