@@ -9,3 +9,7 @@ variable glue_role {
 variable conversion_lambda_function_arn {
     type = string
 }
+
+variable clean_lambda_function_arn {
+    type = string
+}

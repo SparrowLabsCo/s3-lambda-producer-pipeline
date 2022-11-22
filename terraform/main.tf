@@ -19,7 +19,9 @@ module "s3" {
   crawler_s3_handler_arn = module.lambda.crawler_lambda_arn
   glue_role = module.iam.glue_role.arn
   conversion_lambda_function_arn = module.lambda.conversion_s3_lambda_arn
+  clean_lambda_function_arn = module.lambda.clean_s3_lambda_arn
 }
+
 
 module "sqs" {
   source = "./modules/sqs"
@@ -40,7 +42,8 @@ module "lambda" {
   region = var.region
   input_bucket_arn = module.s3.input_bucket_arn
   output_bucket_arn = module.s3.output_bucket_arn
-  job_name = module.s3.job_name
+  transform_job_name = module.s3.transform_job_name
+  clean_job_name = module.s3.clean_job_name
   
   depends_on = [
     module.sg

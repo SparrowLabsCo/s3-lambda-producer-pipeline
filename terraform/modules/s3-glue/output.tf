@@ -20,6 +20,10 @@ output "crawler_name" {
   value = aws_glue_crawler.crawler.name
 }
 
-output "job_name" {
+output "transform_job_name" {
   value = aws_glue_job.transform_job.name
+}
+
+output "clean_job_name" {
+  value = aws_glue_job.clean_job.name
 }

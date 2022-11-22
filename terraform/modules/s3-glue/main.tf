@@ -98,20 +98,25 @@ resource "aws_cloudwatch_event_rule" "glue-transform-job-state-change" {
   EOF
 }
 
-resource "aws_glue_trigger" "trigger_clean_job" {
-  name = "trigger-clean-job"
-  type = "CONDITIONAL"
+# resource "aws_glue_trigger" "trigger_clean_job" {
+#   name = "trigger-clean-job"
+#   type = "CONDITIONAL"
 
-  actions {
-    job_name = aws_glue_job.clean_job.name
-  }
+#   actions {
+#     job_name = aws_glue_job.clean_job.name
+#   }
 
-  predicate {
-    conditions {
-      job_name = aws_glue_job.transform_job.name
-      state    = "SUCCEEDED"
-    }
-  }
+#   predicate {
+#     conditions {
+#       job_name = aws_glue_job.transform_job.name
+#       state    = "SUCCEEDED"
+#     }
+#   }
+# }
+
+resource "aws_cloudwatch_event_target" "clean-lambda-target" {
+  arn = var.clean_lambda_function_arn
+  rule = aws_cloudwatch_event_rule.glue-transform-job-state-change.name
 }
 
 resource "aws_cloudwatch_event_target" "conversion-lambda-target" {
@@ -125,6 +130,14 @@ resource "aws_lambda_permission" "allow-cloudwatch-to-call-conversion-lambda" {
   function_name = var.conversion_lambda_function_arn
   principal = "events.amazonaws.com"
   source_arn = aws_cloudwatch_event_rule.glue-crawler-state-change.arn
+}
+
+resource "aws_lambda_permission" "allow-cloudwatch-to-call-clean-lambda" {
+  statement_id = "AllowExecutionFromCloudWatch"
+  action = "lambda:InvokeFunction"
+  function_name = var.clean_lambda_function_arn
+  principal = "events.amazonaws.com"
+  source_arn = aws_cloudwatch_event_rule.glue-transform-job-state-change.arn
 }
 
 resource "aws_glue_catalog_database" "aws_glue_catalog_database" {
