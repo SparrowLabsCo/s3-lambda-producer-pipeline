@@ -98,9 +98,20 @@ resource "aws_cloudwatch_event_rule" "glue-transform-job-state-change" {
   EOF
 }
 
-resource "aws_cloudwatch_event_target" "transform-job-target" {
-  arn = aws_glue_job.clean_job.arn
-  rule = aws_cloudwatch_event_rule.glue-transform-job-state-change.name
+resource "aws_glue_trigger" "trigger_clean_job" {
+  name = "trigger-clean-job"
+  type = "CONDITIONAL"
+
+  actions {
+    job_name = aws_glue_job.clean_job.name
+  }
+
+  predicate {
+    conditions {
+      job_name = aws_glue_job.transform_job.name
+      state    = "SUCCEEDED"
+    }
+  }
 }
 
 resource "aws_cloudwatch_event_target" "conversion-lambda-target" {
