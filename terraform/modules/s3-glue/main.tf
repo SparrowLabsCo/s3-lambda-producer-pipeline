@@ -73,6 +73,36 @@ resource "aws_cloudwatch_event_rule" "glue-crawler-state-change" {
 
 }
 
+resource "aws_cloudwatch_event_rule" "glue-transform-job-state-change" {
+  name        = "glue-transform-job-state-change"
+  description = "Glue Transform Job State Change Event"
+  is_enabled = true
+
+  event_pattern = <<EOF
+  {
+    "source": [
+      "aws.glue"
+    ],
+    "detail-type":[
+      "Glue Job State Change"
+    ],
+    "detail": {
+      "state": [
+        "SUCCEEDED"
+      ],
+      "jobName": [
+          "${aws_glue_job.transform_job.name}"
+      ]
+    }
+  }
+  EOF
+}
+
+resource "aws_cloudwatch_event_target" "transform-job-target" {
+  arn = aws_glue_job.clean_job.arn
+  rule = aws_cloudwatch_event_rule.glue-transform-job-state-change.name
+}
+
 resource "aws_cloudwatch_event_target" "conversion-lambda-target" {
   arn = var.conversion_lambda_function_arn
   rule = aws_cloudwatch_event_rule.glue-crawler-state-change.name
