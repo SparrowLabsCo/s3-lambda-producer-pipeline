@@ -112,7 +112,7 @@ resource "aws_glue_crawler" "crawler" {
   }
 }
 
-data "template_file" "glue_job_transform" {
+data "template_file" "glue_job_transform_tmpl" {
   template = "${file("${path.module}/scripts/transform.py")}"
   vars = {
     glue_catalog_database   = aws_glue_catalog_database.aws_glue_catalog_database.name
@@ -121,11 +121,26 @@ data "template_file" "glue_job_transform" {
   }
 }
 
+data "template_file" "glue_job_clean_tmpl" {
+  template = "${file("${path.module}/scripts/cleanse.py")}"
+  vars = {
+    source_s3               = "s3://${aws_s3_bucket.output_bucket.bucket}/patients/_raw/"
+    target_s3               = "s3://${aws_s3_bucket.output_bucket.bucket}/patients/_clean/"
+  }
+}
+
 resource "aws_s3_object" "glue_transform_job" {
   bucket = aws_s3_bucket.glue_bucket.bucket
   key = "scripts/transform.py"
   
-  content = data.template_file.glue_job_transform.rendered
+  content = data.template_file.glue_job_transform_tmpl.rendered
+}
+
+resource "aws_s3_object" "glue_clean_job" {
+  bucket = aws_s3_bucket.glue_bucket.bucket
+  key = "scripts/cleanse.py"
+  
+  content = data.template_file.glue_job_clean_tmpl.rendered
 }
 
 resource "aws_glue_job" "transform_job" {
@@ -140,6 +155,35 @@ resource "aws_glue_job" "transform_job" {
 
   command {
     script_location = "s3://${aws_s3_bucket.glue_bucket.bucket}/scripts/transform.py"
+    python_version  = "3"
+  }
+
+  default_arguments = {    
+    "--job-language"          = "python"
+    "--ENV"                   = "env"
+    "--spark-event-logs-path" = "s3://${aws_s3_bucket.glue_bucket.bucket}/spark-logs/"
+    "--job-bookmark-option"   = "job-bookmark-enable"
+    "--enable-spark-ui"       = "true"
+  }
+
+  execution_property {
+    max_concurrent_runs = 1
+  }
+}
+
+
+resource "aws_glue_job" "clean_job" {
+  name         = "clean_job"
+  description  = "Clean Job"
+  role_arn     = "${var.glue_role}"
+  number_of_workers = 3
+  max_retries  = 1
+  timeout      = 10
+  glue_version = "3.0"
+  worker_type  = "G.1X"
+
+  command {
+    script_location = "s3://${aws_s3_bucket.glue_bucket.bucket}/scripts/cleanse.py"
     python_version  = "3"
   }
 
