@@ -60,7 +60,27 @@ resource "aws_lambda_function" "conversion_s3_handler" {
   
   environment {
     variables = {
-      JOB_NAME  = var.job_name
+      JOB_NAME  = var.transform_job_name
+    }
+  }
+}
+
+resource "aws_lambda_function" "clean_s3_handler" {
+  function_name    = "clean-s3-data"
+  filename         = data.archive_file.lambda_zip_file.output_path
+  source_code_hash = data.archive_file.lambda_zip_file.output_base64sha256
+  handler          = "conversion.handler"
+  role             = var.lambda_role_arn
+  runtime          = var.runtime
+  layers           = ["${aws_lambda_layer_version.dependencies.arn}"]
+  vpc_config {
+    subnet_ids = var.subnet_ids
+    security_group_ids = concat(var.additional_security_group_ids, [])
+  }
+  
+  environment {
+    variables = {
+      JOB_NAME  = var.clean_job_name
     }
   }
 }
@@ -87,10 +107,22 @@ resource "aws_lambda_permission" "allow_conversion_s3_lambda" {
   source_arn    = var.output_bucket_arn
 }
 
+resource "aws_lambda_permission" "allow_clean_s3_lambda" {
+  statement_id  = "AllowExecutionFromS3Bucket"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.clean_s3_handler.arn
+  principal     = "s3.amazonaws.com"
+  source_arn    = var.output_bucket_arn
+}
+
 output crawler_lambda_arn {
   value = aws_lambda_function.crawler_s3_handler.arn
 }
 
 output conversion_s3_lambda_arn {
   value = aws_lambda_function.conversion_s3_handler.arn
+}
+
+output clean_s3_lambda_arn {
+  value = aws_lambda_function.clean_s3_handler.arn
 }

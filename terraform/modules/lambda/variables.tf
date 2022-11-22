@@ -58,6 +58,10 @@ variable "crawler_name" {
     type = string
 }
 
-variable "job_name" {
+variable "transform_job_name" {
+    type = string
+}
+
+variable "clean_job_name" {
     type = string
 }
