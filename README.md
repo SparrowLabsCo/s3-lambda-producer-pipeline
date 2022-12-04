@@ -30,3 +30,11 @@ When we upload an object to S3, this will trigger the Lambda function which will
 After deployment, create a folder named `patients` in the S3 input bucket and upload the patients.csv file from the `data/` folder. Go to the CloudWatch Logs for the deployed Lambda function. You will see the event is logged out containing the Object data.  Go to the AWS Glue catalog to see the crawler status and tables created.  You can check the output bucket after approximately 5 minutes.
 
 
+## Spark Streaming
+
+Start your pyspark environment with the folllowing packages:
+
+```
+pyspark --packages org.apache.hadoop:hadoop-aws:3.3.1,org.apache.kafka:kafka-clients:3.3.1,org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.1,commons-logging:commons-logging:1.1.3,io.delta:delta-core_2.12:2.1.1 --conf "spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension" --conf "spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog"
+```
+
