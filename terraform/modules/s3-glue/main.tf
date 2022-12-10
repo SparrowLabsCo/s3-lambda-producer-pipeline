@@ -233,7 +233,7 @@ resource "aws_glue_job" "clean_job" {
   number_of_workers = 3
   max_retries  = 1
   timeout      = 10
-  glue_version = "3.0"
+  glue_version = "4.0"
   worker_type  = "G.1X"
 
   command {
