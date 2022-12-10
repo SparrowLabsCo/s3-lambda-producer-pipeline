@@ -247,6 +247,8 @@ resource "aws_glue_job" "clean_job" {
     "--spark-event-logs-path" = "s3://${aws_s3_bucket.glue_bucket.bucket}/spark-logs/"
     "--job-bookmark-option"   = "job-bookmark-enable"
     "--enable-spark-ui"       = "true"
+    "--conf"                  = "spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension --conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog"
+    "--datalake-formats"      = "delta,presto"
   }
 
   execution_property {

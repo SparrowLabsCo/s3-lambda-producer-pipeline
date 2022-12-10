@@ -41,6 +41,7 @@ people_bronze = people_bronze.withColumn("last_name", ascii_udf('surname'))
 people_bronze = people_bronze.withColumn("suffix", f.lower(trim_to_null("suffix")))
 people_bronze = people_bronze.drop(people_bronze.surname)
 people_bronze.printSchema()
-people_bronze.write.format("parquet").mode("overwrite").save("${target_s3}")
+people_bronze.write.format("parquet").mode("overwrite").save("${target_s3}/parquet")
+people_bronze.write.format("delta").mode("overwrite").save("${target_s3}/delta")
 
 job.commit()
