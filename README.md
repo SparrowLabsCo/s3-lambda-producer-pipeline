@@ -7,7 +7,7 @@ A Lambda function consumes `ObjectCreated` events from an Amazon S3 bucket to st
 
 ## Notes
 
-1.  This blueprint will create a vpc as part of the deployment unless `vpc_id` is passsd as a variable to terraform commands.
+1.  This blueprint will create a vpc as part of the deployment unless `vpc_id` is passed as a variable to terraform commands.
 
 ## Deployment Instructions
 
