@@ -2,7 +2,7 @@
 module "iam" {
   source = "./modules/iam"
   region = var.region
-  default_tags = var.octo_tags
+  default_tags = var.tags
   
   bucket_arns = [
     "${module.s3.input_bucket_arn}/*",
@@ -25,7 +25,7 @@ module "s3" {
 
 module "sqs" {
   source = "./modules/sqs"
-  tags = var.octo_tags
+  tags = var.tags
 }
 
 module "lambda" {
